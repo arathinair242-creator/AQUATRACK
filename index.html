@@ -1,0 +1,206 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaTrack | Water Monitor</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<section id="loginPage" class="login-page">
+  <div class="login-visual">
+    <div class="brand">Aqua<span>Track.</span></div>
+    <div class="water-drop">💧</div>
+    <h1>Every drop<br>counts.</h1>
+    <p>Understand your water habits, monitor daily consumption, and make every litre matter.</p>
+  </div>
+
+  <div class="login-panel">
+    <form id="loginForm" class="login-card">
+      <span class="eyebrow">YOUR PERSONAL DASHBOARD</span>
+      <h2>Welcome back</h2>
+      <p>Sign in to continue to AquaTrack.</p>
+
+      <label for="loginEmail">Email address</label>
+      <input id="loginEmail" type="email" placeholder="Enter your email" required>
+
+      <label for="loginPassword">Password</label>
+      <input id="loginPassword" type="password" placeholder="Enter your password" required>
+
+      <p id="loginError" class="error"></p>
+      <button class="primary-btn" type="submit">Sign in to AquaTrack →</button>
+    </form>
+  </div>
+</section>
+
+<div id="appShell" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand">Aqua<span>Track.</span></div>
+    <nav>
+      <a href="#overview">Overview</a>
+      <a href="#usagePanel">Add water usage</a>
+      <a href="#analyticsPanel">Usage analytics</a>
+      <a href="#historyPanel">Usage history</a>
+      <a href="#goalPanel">Daily goal</a>
+    </nav>
+    <div class="profile">
+      <div class="avatar" id="userAvatar">A</div>
+      <strong id="userName">AquaTrack User</strong>
+      <button id="logoutButton" class="logout">Logout</button>
+    </div>
+  </aside>
+
+  <main class="main" id="overview">
+    <header class="topbar">
+      <div>
+        <p class="muted">WORKSPACE / OVERVIEW</p>
+        <h1>Water dashboard</h1>
+        <p>Track your consumption. Build better habits.</p>
+      </div>
+      <span id="todayLabel"></span>
+    </header>
+
+    <section class="hero">
+      <div>
+        <span class="eyebrow">YOUR DAILY IMPACT</span>
+        <h2>Make every <span>litre</span> count.</h2>
+        <p>Monitor water use and stay within your daily goal.</p>
+        <a href="#usagePanel" class="light-btn">+ Record water usage</a>
+      </div>
+      <div class="hero-drop">💧</div>
+    </section>
+
+    <section class="stats-grid">
+      <article class="stat-card">
+        <p>Total water consumed</p>
+        <div class="stat-value"><strong id="totalLitres">0</strong> L</div>
+        <small id="consumptionCaption">Recorded for today</small>
+      </article>
+      <article class="stat-card">
+        <p>Daily consumption limit</p>
+        <div class="stat-value"><strong id="limitLabel">150</strong> L</div>
+        <small>Your daily water goal</small>
+      </article>
+      <article class="stat-card">
+        <p>Water remaining</p>
+        <div class="stat-value"><strong id="remainingLitres">150</strong> L</div>
+        <small id="remainingCaption">Available within your limit</small>
+      </article>
+      <article class="stat-card">
+        <p>Activities recorded</p>
+        <div class="stat-value"><strong id="activityCount">0</strong></div>
+        <small>For the selected date</small>
+      </article>
+    </section>
+
+    <section class="content-grid">
+      <article class="panel" id="usagePanel">
+        <h2>Record water usage</h2>
+        <p>Add an activity to calculate your daily consumption.</p>
+        <form id="usageForm">
+          <label for="activity">Activity</label>
+          <select id="activity" required>
+            <option value="Bathing">Bathing / Shower</option>
+            <option value="Washing">Laundry / Washing</option>
+            <option value="Cooking">Cooking / Drinking</option>
+            <option value="Dishwashing">Dishwashing</option>
+            <option value="Cleaning">House cleaning</option>
+            <option value="Gardening">Gardening</option>
+            <option value="Other">Other</option>
+          </select>
+
+          <div class="form-row">
+            <div>
+              <label for="litres">Water used (litres)</label>
+              <input id="litres" type="number" min="0.1" step="0.1" required placeholder="e.g. 25">
+            </div>
+            <div>
+              <label for="usageDate">Date</label>
+              <input id="usageDate" type="date" required>
+            </div>
+          </div>
+          <button class="primary-btn" type="submit">+ Record usage</button>
+        </form>
+      </article>
+
+      <article class="panel" id="goalPanel">
+        <h2>Daily consumption goal</h2>
+        <p>Set a daily water-use limit.</p>
+        <form id="limitForm">
+          <label for="dailyLimit">Daily limit (litres)</label>
+          <div class="form-row">
+            <input id="dailyLimit" type="number" min="1" max="100000" required>
+            <button class="primary-btn" type="submit">Update</button>
+          </div>
+        </form>
+        <div class="meter-heading">
+          <span>Daily limit used</span>
+          <strong id="limitPercent">0%</strong>
+        </div>
+        <div class="meter"><span id="usageProgress"></span></div>
+        <p id="limitMeterEnd">150 L goal</p>
+        <div id="limitMessage" class="limit-message">
+          <strong id="statusTitle">Ready to get started</strong>
+          <p id="statusText">Record water usage to monitor your goal.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="panel" id="analyticsPanel">
+      <div class="panel-heading">
+        <div>
+          <h2>Activity-wise usage</h2>
+          <p>Compare water consumption across activities.</p>
+        </div>
+        <div>
+          <label for="chartDate">Select date</label>
+          <input id="chartDate" type="date">
+        </div>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="activityChart"></canvas>
+      </div>
+      <div class="chart-summary">
+        <strong>Total: <span id="chartTotal">0</span> L</strong>
+        <p id="chartSummary">Add water usage to view the chart.</p>
+      </div>
+    </section>
+
+    <section class="panel" id="historyPanel">
+      <div class="panel-heading">
+        <div>
+          <h2>Water usage history</h2>
+          <p>Records for the selected date.</p>
+        </div>
+        <button id="clearDayButton" class="outline-btn" type="button">Clear selected day</button>
+      </div>
+      <div id="emptyState">No records for this date yet.</div>
+      <div class="table-wrap">
+        <table id="historyTable" class="hidden">
+          <thead>
+            <tr><th>Activity</th><th>Date</th><th>Water used</th><th>Action</th></tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="tip-banner">
+      <div>
+        <span class="eyebrow">WATER-SAVING TIP</span>
+        <h3 id="tipTitle">Make showers shorter.</h3>
+        <p id="tipText">Reducing shower time can save several litres of water.</p>
+      </div>
+      <button id="newTipButton" type="button" class="outline-btn">Another tip ↗</button>
+    </section>
+    <footer>AquaTrack · Smart water monitoring</footer>
+  </main>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+<script src="script.js"></script>
+</body>
+</html>
